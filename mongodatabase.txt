@@ -1,0 +1,44 @@
+mongo --host=192.168.43.58 --port=27017
+>mongod --dbpath="d:\db1" --bind_ip=192.168.43.58 --journal
+
+
+
+
+
+
+
+mongod --dbpath=D:\db1 --bind_ip=192.168.0.101
+
+
+mongo --host=192.168.0.101 --port=27017
+mongoimport --host=192.168.0.101 --port=27017 --db=primaryDB --collection=emp --type=JSON --file="D:\emp.json"
+mongoimport --host=192.168.0.101 --port=27017 --db=primaryDB --collection=RealEstate --type=csv --file="D:\RealEstate.csv" --headerline
+
+
+drop procedure if exists pro_emp;
+delimiter //
+create procedure pro_emp()
+BEGIN
+	declare e_EMPNO int;
+	declare e_ENAME varchar(20);
+	 declare e_JOB varchar(20);
+	declare e_MGR int; 
+	declare e_HIREDATE date;
+	declare e_SAL int;
+	declare e_COMM int;
+	declare e_DEPTNO int;
+	declare e_BONUSID int;
+	declare e_USERNAME varchar(20);
+	declare e_PWD varchar(20);
+	declare e_phone varchar(45);
+	declare e_isActive tinyint(1);
+	declare cur1Emp CURSOR FOR select * from emp;
+	declare exit handler FOR 1329 select "End Of File";
+	open cur1Emp;
+	  z:loop
+		fetch cur1Emp into e_EMPNO, e_ENAME, e_JOB, e_MGR, e_HIREDATE, e_SAL, e_COMM, e_DEPTNO, e_BONUSID, e_USERNAME, e_PWD, e_phone, e_isActive;
+		select e_EMPNO, e_ENAME, e_JOB, e_MGR, e_HIREDATE, e_SAL, e_COMM, e_DEPTNO, e_BONUSID, e_USERNAME, e_PWD, e_phone, e_isActive;
+	  end loop z;
+	close cur1Emp;
+END //
+delimiter ;
